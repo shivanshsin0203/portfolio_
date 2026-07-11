@@ -14,7 +14,7 @@ export function Hero() {
       </Reveal>
 
       <Reveal delay={60}>
-        <h1 className="display text-[10vw] text-ink sm:text-[60px] lg:text-[76px]">
+        <h1 className="display text-[11.5vw] text-ink sm:text-[76px] lg:text-[95px]">
           {profile.headline[0]}
           <br />
           <span className="text-ultra">{profile.headline[1]}</span>
