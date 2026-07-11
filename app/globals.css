@@ -442,6 +442,54 @@ html {
   transform: rotate(-90deg) scale(0.4);
 }
 
+/* the raven that sweeps the theme in */
+.raven-host {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 70;
+  pointer-events: none;
+  will-change: transform;
+}
+.raven-host[data-tone="dark"] {
+  color: #07090b;
+}
+.raven-host[data-tone="light"] {
+  color: #e2b34c;
+}
+.raven-bob {
+  will-change: transform;
+}
+.raven-f {
+  transform-origin: 62px 31px;
+}
+.raven-f1 {
+  animation: raven-flap-a 190ms steps(1) infinite;
+}
+.raven-f2 {
+  animation: raven-flap-b 190ms steps(1) infinite;
+}
+@keyframes raven-flap-a {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes raven-flap-b {
+  0%,
+  49% {
+    opacity: 0;
+  }
+  50%,
+  100% {
+    opacity: 1;
+  }
+}
+
 /* click ray-burst around the toggle */
 .ray-burst {
   position: fixed;
