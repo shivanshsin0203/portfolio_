@@ -3,22 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { currentTheme, toggleTheme, type Theme } from "@/lib/theme";
 
-/** Eight short rays that burst out of the button on click, then vanish. */
-function burst(x: number, y: number, toDark: boolean) {
-  const host = document.createElement("div");
-  host.className = "ray-burst";
-  host.style.left = `${x}px`;
-  host.style.top = `${y}px`;
-  host.dataset.tone = toDark ? "dark" : "light";
-  for (let i = 0; i < 8; i++) {
-    const ray = document.createElement("span");
-    ray.style.setProperty("--a", `${i * 45}deg`);
-    host.appendChild(ray);
-  }
-  document.body.appendChild(host);
-  setTimeout(() => host.remove(), 700);
-}
-
 export function ThemeToggle() {
   const [theme, setTheme] = useState<Theme>("light");
   const ref = useRef<HTMLButtonElement>(null);
@@ -33,10 +17,6 @@ export function ThemeToggle() {
   const onClick = () => {
     const r = ref.current?.getBoundingClientRect();
     const origin = r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : undefined;
-    const goingDark = theme !== "dark";
-    if (origin && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      burst(origin.x, origin.y, goingDark);
-    }
     toggleTheme(origin);
   };
 
