@@ -6,22 +6,22 @@ import { Reveal } from "./atoms";
 
 export function Hero() {
   return (
-    <section id="top" className="mx-auto w-full max-w-[1180px] px-5 pt-16 pb-14 sm:px-8 sm:pt-24">
+    <section id="top" className="mx-auto w-full max-w-[1180px] px-5 pt-14 pb-14 sm:px-8 sm:pt-18">
       <Reveal>
-        <p className="eyebrow mb-6">
+        <p className="eyebrow mb-5">
           00 · {profile.name} · {profile.role} · B.Tech ’26
         </p>
       </Reveal>
 
       <Reveal delay={60}>
-        <h1 className="display text-[12.5vw] text-ink sm:text-[84px] lg:text-[104px]">
+        <h1 className="display text-[10vw] text-ink sm:text-[60px] lg:text-[76px]">
           {profile.headline[0]}
           <br />
           <span className="text-ultra">{profile.headline[1]}</span>
         </h1>
       </Reveal>
 
-      <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12">
+      <div className="mt-8 grid grid-cols-1 gap-8 lg:grid-cols-12">
         <Reveal delay={120} className="lg:col-span-5">
           <a href="#contact" className="hire-chip mb-5">
             <span className="dot dot-ok" aria-hidden />
