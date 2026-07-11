@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# shivansh — system specification
 
-## Getting Started
+A portfolio that doesn't claim, it proves: the page live-monitors my three production products
+(gitdocs.online, squadwars.online, pricealert.store), streams my real GitHub presence over SSE,
+and reads like an engineering spec sheet — claims on paper, evidence on dark instrument panels.
 
-First, run the development server:
+## Run it
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Update content (the whole point — no code needed)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| What | Where | How often |
+|---|---|---|
+| What I'm doing right now | [`data/now.ts`](data/now.ts) | Whenever life changes. Update `updatedAt` too — it's rendered. |
+| Bio, links, headline | [`data/profile.ts`](data/profile.ts) | Rarely |
+| Projects / case studies | [`data/projects.ts`](data/projects.ts) | Per launch |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Adding a project:** append an entry to `projects` in `data/projects.ts`, drop its demo video or
+poster in `public/media/`, done — the case study, live uptime monitor, OG data and llms.txt all
+pick it up automatically. `media.kind` can be `"video"` or `"terminal"` (an animated terminal
+mock, used by PriceAlert until its demo film exists — swap it to `"video"` when ready).
 
-## Learn More
+## Live layer
 
-To learn more about Next.js, take a look at the following resources:
+- `app/api/live` — SSE stream. One server-side poller feeds every visitor: uptime pings every 30s,
+  GitHub events every 2 min, LeetCode every 30 min. Timers stop when nobody's watching.
+- `app/api/snapshot` — same data as JSON, for curl-ers and AI agents.
+- Presence ("shipping right now / active today / last seen") is derived from public GitHub events.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Env vars
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Var | Needed? | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | in prod | Canonical URL for OG images, sitemap, llms.txt |
+| `GITHUB_TOKEN` | optional | Raises the GitHub API limit from 60 → 5000 req/hr. A classic PAT with **no scopes** is enough. |
 
-## Deploy on Vercel
+## Deploy (Vercel)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+vercel --prod
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Then set `NEXT_PUBLIC_SITE_URL` to the real domain and (optionally) `GITHUB_TOKEN` in the Vercel
+dashboard. The SSE function has `maxDuration: 300`; when Vercel ends it, `EventSource` reconnects
+by itself — visitors never notice.
+
+## SEO / AI-crawler layer
+
+- `app/opengraph-image.tsx` — OG card rendered at the edge (test with an X card validator)
+- `app/llms.txt/route.ts` — token-cheap summary for AI crawlers, linked from robots + footer
+- `app/robots.ts`, `app/sitemap.ts`, JSON-LD Person schema in `app/layout.tsx`
+
+## Easter egg
+
+Press `t` anywhere — a guest terminal opens. `help`, `ping`, `whoami`, `hire`, `sudo hire`.
