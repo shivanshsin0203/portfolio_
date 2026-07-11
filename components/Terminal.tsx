@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { profile } from "@/data/profile";
-import { now } from "@/data/now";
 import { projects } from "@/data/projects";
 import { toggleTheme } from "@/lib/theme";
 import { useLive } from "./LiveProvider";
@@ -11,17 +10,14 @@ type Line = { text: string; tone?: "dim" | "ok" | "warn" | "cmd" };
 
 const BANNER: Line[] = [
   { text: "shivansh@portfolio — guest session", tone: "dim" },
-  { text: "click a command or type it. 'help' lists everything.", tone: "dim" },
+  { text: "press t anywhere to open this · esc closes · 'help' lists commands", tone: "dim" },
 ];
 
 const COMMANDS = [
   ["help", "this menu"],
   ["whoami", "the short version"],
-  ["ls", "the production systems"],
-  ["ping", "live status of all three"],
+  ["ping", "live status of my three products"],
   ["open <name>", "gitdocs · squadwars · pricealert · x · github"],
-  ["now", "what I'm on this month"],
-  ["socials", "where to find me"],
   ["hire", "the important one"],
   ["theme", "lights on / lights off"],
   ["clear", "wipe the scrollback"],
@@ -100,15 +96,8 @@ export function Terminal() {
           out.push(
             { text: `${profile.name} — ${profile.role.toLowerCase()}, ${profile.batch}` },
             { text: "ships to real domains, argues with LLMs for sport", tone: "dim" },
-            { text: `status: ${profile.hireLine}`, tone: "ok" },
+            { text: "status: open to new opportunities", tone: "ok" },
           );
-          break;
-        case "ls":
-        case "projects":
-          for (const p of projects) {
-            out.push({ text: `${p.index.toLowerCase()}  ${p.name.padEnd(11)} ${p.url}` });
-          }
-          out.push({ text: "tip: open squadwars", tone: "dim" });
           break;
         case "ping": {
           const products = snap?.products ?? [];
@@ -139,27 +128,9 @@ export function Terminal() {
           }
           break;
         }
-        case "now":
-          out.push({ text: `as of ${now.updatedAt}:`, tone: "dim" });
-          for (const p of now.processes) {
-            out.push({
-              text: `${p.state.padEnd(10)} ${p.name} — ${p.detail}`,
-              tone: p.state === "open" ? "ok" : undefined,
-            });
-          }
-          break;
-        case "socials":
-          out.push(
-            { text: `x         ${profile.links.x}` },
-            { text: `github    ${profile.links.github}` },
-            { text: `linkedin  ${profile.links.linkedin}` },
-            { text: `leetcode  ${profile.links.leetcode}` },
-            { text: `email     ${profile.email}` },
-          );
-          break;
         case "hire":
           out.push(
-            { text: "correct instinct. I'm looking for a startup role.", tone: "ok" },
+            { text: "good call. I'm open to full-time engineering roles.", tone: "ok" },
             { text: `fastest route: ${profile.links.x}`, tone: "dim" },
             { text: `formal route:  ${profile.email}`, tone: "dim" },
           );
@@ -175,9 +146,6 @@ export function Terminal() {
         case "q":
           setOpen(false);
           return;
-        case "sudo":
-          out.push({ text: "permission granted. we both knew.", tone: "ok" });
-          break;
         default:
           out.push({ text: `command not found: ${cmd} — try 'help'`, tone: "warn" });
       }
@@ -207,10 +175,13 @@ export function Terminal() {
       <button
         className="term-launcher"
         onClick={() => setOpen(true)}
-        aria-label="Open guest terminal"
+        aria-label="Open guest terminal (or press t)"
+        title="or press t"
       >
         <span aria-hidden>&gt;_</span>
-        <span className="hidden sm:inline">terminal</span>
+        <span className="hidden sm:inline">
+          terminal <span className="opacity-60">· press t</span>
+        </span>
       </button>
 
       {open && (
@@ -261,7 +232,7 @@ export function Terminal() {
 
             {/* one-tap commands — the terminal works without a keyboard */}
             <div className="flex flex-wrap gap-1.5 border-t border-console-line px-3 py-2">
-              {["ping", "whoami", "now", "hire", "theme", "help"].map((c) => (
+              {["ping", "whoami", "hire", "theme", "help"].map((c) => (
                 <button
                   key={c}
                   onClick={() => {

@@ -14,8 +14,8 @@ export const profile = {
   leetcodeUser: "singhshivansh12may",
   headline: ["Fresh out of college.", "Already in production."],
   intro:
-    "I'm Shivansh, a ’26 batch engineer hunting my first startup role. Instead of a resume full of adjectives, here are three products I built and run myself. The green dots, the latency numbers, the commit feed below — all of it is checked live while you read.",
-  hireLine: "open to startup roles",
+    "I'm Shivansh, a ’26 batch engineer from NIT Hamirpur. Instead of a resume full of adjectives, here are three products I built and run myself — and a page that checks on them live while you read it.",
+  hireLine: "open to work",
   links: {
     x: "https://x.com/ShivanshSi0203",
     github: "https://github.com/shivanshsin0203",

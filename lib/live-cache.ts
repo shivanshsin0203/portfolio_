@@ -5,9 +5,11 @@
  * (GitHub, LeetCode, the product domains) see a constant, tiny request rate
  * no matter how many people are watching the page:
  *   - uptime pings      every 30s
- *   - GitHub events     every 2min  (well inside the unauthenticated 60/hr limit)
+ *   - GitHub events     every 4min   (~15/hr)
+ *   - GitHub profile    every 30min  (~2/hr)   → comfortably inside the 60/hr anonymous cap
  *   - LeetCode stats    every 30min
- * Timers only run while at least one subscriber is connected.
+ * Timers only run while at least one subscriber is connected, and failures
+ * never clear previously fetched data.
  */
 import type { GitHubEvent, LiveSnapshot } from "./types";
 import { pingAll, initialProducts } from "./uptime";
@@ -15,8 +17,10 @@ import { fetchEvents, fetchProfile, derivePresence } from "./github";
 import { fetchLeetCode } from "./leetcode";
 
 const TICK_MS = 30_000;
-const GITHUB_EVERY = 4; // ticks
-const LEETCODE_EVERY = 60; // ticks
+const EVENTS_MS = 4 * 60_000;
+const PROFILE_MS = 30 * 60_000;
+const LEETCODE_MS = 30 * 60_000;
+const SNAPSHOT_FRESH_MS = 10_000;
 
 type Subscriber = (snap: LiveSnapshot) => void;
 
@@ -25,9 +29,10 @@ type Store = {
   events: GitHubEvent[];
   subscribers: Set<Subscriber>;
   timer: ReturnType<typeof setInterval> | null;
-  tick: number;
   refreshing: boolean;
-  lastGitHubAt: number;
+  lastUptimeAt: number;
+  lastEventsAt: number;
+  lastProfileAt: number;
   lastLeetCodeAt: number;
 };
 
@@ -49,9 +54,10 @@ function freshStore(): Store {
     events: [],
     subscribers: new Set(),
     timer: null,
-    tick: 0,
     refreshing: false,
-    lastGitHubAt: 0,
+    lastUptimeAt: 0,
+    lastEventsAt: 0,
+    lastProfileAt: 0,
     lastLeetCodeAt: 0,
   };
 }
@@ -70,13 +76,14 @@ function broadcast() {
 }
 
 async function refreshUptime() {
+  store.lastUptimeAt = Date.now();
   const products = await pingAll();
   store.snapshot = { ...store.snapshot, products };
 }
 
-async function refreshGitHub() {
-  const [result, gh] = await Promise.all([fetchEvents(), fetchProfile()]);
-  store.lastGitHubAt = Date.now();
+async function refreshEvents() {
+  store.lastEventsAt = Date.now(); // set first so failures back off too
+  const result = await fetchEvents();
   if (result) {
     store.events = result.events;
     store.snapshot = {
@@ -86,28 +93,29 @@ async function refreshGitHub() {
       githubOk: true,
     };
   }
+}
+
+async function refreshProfile() {
+  store.lastProfileAt = Date.now();
+  const gh = await fetchProfile();
   if (gh) store.snapshot = { ...store.snapshot, github: gh };
 }
 
 async function refreshLeetCode() {
-  const leetcode = await fetchLeetCode();
   store.lastLeetCodeAt = Date.now();
+  const leetcode = await fetchLeetCode();
   if (leetcode) store.snapshot = { ...store.snapshot, leetcode };
 }
 
-async function runTick(full: boolean) {
+async function runTick() {
   if (store.refreshing) return;
   store.refreshing = true;
   try {
     const jobs: Promise<void>[] = [refreshUptime()];
-    const githubDue =
-      full || store.tick % GITHUB_EVERY === 0 || Date.now() - store.lastGitHubAt > GITHUB_EVERY * TICK_MS;
-    const leetcodeDue =
-      full || Date.now() - store.lastLeetCodeAt > LEETCODE_EVERY * TICK_MS;
-    if (githubDue) jobs.push(refreshGitHub());
-    if (leetcodeDue) jobs.push(refreshLeetCode());
+    if (Date.now() - store.lastEventsAt > EVENTS_MS) jobs.push(refreshEvents());
+    if (Date.now() - store.lastProfileAt > PROFILE_MS) jobs.push(refreshProfile());
+    if (Date.now() - store.lastLeetCodeAt > LEETCODE_MS) jobs.push(refreshLeetCode());
     await Promise.allSettled(jobs);
-    store.tick++;
     broadcast();
   } finally {
     store.refreshing = false;
@@ -122,9 +130,9 @@ function ensureLoop() {
       store.timer = null;
       return;
     }
-    void runTick(false);
+    void runTick();
   }, TICK_MS);
-  void runTick(true);
+  void runTick();
 }
 
 export function getSnapshot(): LiveSnapshot {
@@ -147,9 +155,9 @@ export function subscribe(fn: Subscriber): () => void {
   };
 }
 
-/** For the JSON snapshot route: refresh once even with no SSE subscribers. */
+/** For the JSON snapshot route and the hero's "run a live check" button. */
 export async function getFreshSnapshot(): Promise<LiveSnapshot> {
-  const stale = Date.now() - new Date(store.snapshot.at).getTime() > TICK_MS;
-  if (stale && !store.refreshing) await runTick(true);
+  const stale = Date.now() - store.lastUptimeAt > SNAPSHOT_FRESH_MS;
+  if (stale && !store.refreshing) await runTick();
   return store.snapshot;
 }

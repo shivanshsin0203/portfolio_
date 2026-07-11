@@ -18,8 +18,8 @@ export function NowSection() {
             Running processes
           </h2>
           <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-ink-soft">
-            What&apos;s actually open on my machine this month. The last row is the one I&apos;d
-            like you to act on.
+            What&apos;s actually open on my machine this month, straight from a data file I keep
+            honest.
           </p>
         </div>
       </Reveal>

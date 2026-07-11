@@ -1,87 +1,15 @@
 "use client";
 
 import { profile } from "@/data/profile";
-import { relativeTime } from "@/lib/github";
-import { useLive } from "./LiveProvider";
-import { Reveal, StatusDot, stateLabel } from "./atoms";
-
-function ProofStrip() {
-  const { snap, connected } = useLive();
-  const products = snap?.products ?? [];
-  const presence = snap?.presence ?? null;
-  const allUp = products.length > 0 && products.every((p) => p.state === "operational");
-
-  return (
-    <div className="panel overflow-hidden">
-      <div className="panel-titlebar justify-between">
-        <span className="flex items-center gap-2">
-          <StatusDot state={connected ? "operational" : "checking"} />
-          live proof · pinged server-side every 30s · streamed over SSE
-        </span>
-        <span className="hidden sm:inline">
-          {allUp ? "all systems operational" : "monitoring"}
-        </span>
-      </div>
-
-      <div className="grid grid-cols-1 divide-y divide-console-line sm:grid-cols-2 lg:grid-cols-4 sm:divide-y-0 sm:divide-x">
-        {products.map((p) => (
-          <a
-            key={p.slug}
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group flex items-center justify-between gap-3 px-4 py-3.5 transition-colors hover:bg-console-raise"
-          >
-            <span className="flex min-w-0 items-center gap-2.5">
-              <StatusDot state={p.state} />
-              <span className="mono truncate text-[13px] text-console-text group-hover:text-white">
-                {p.domain}
-              </span>
-            </span>
-            <span className="mono flex-none text-[11px] tabular-nums text-console-dim">
-              {p.state === "checking"
-                ? "…"
-                : p.latencyMs !== null
-                  ? `${p.latencyMs}ms`
-                  : stateLabel(p.state)}
-            </span>
-          </a>
-        ))}
-
-        {products.length === 0 && (
-          <div className="col-span-full px-4 py-3.5">
-            <span className="mono text-[12px] text-console-dim">establishing uplink…</span>
-          </div>
-        )}
-
-        {products.length > 0 && (
-          <div className="flex items-center justify-between gap-3 px-4 py-3.5">
-            <span className="flex min-w-0 items-center gap-2.5">
-              <StatusDot state={presence?.state ?? "away"} />
-              <span className="mono truncate text-[13px] text-console-text">
-                {presence?.state === "live"
-                  ? "shipping right now"
-                  : presence?.state === "today"
-                    ? "active today"
-                    : presence?.lastEventAt
-                      ? `last commit ${relativeTime(presence.lastEventAt)}`
-                      : "reading github…"}
-              </span>
-            </span>
-            <span className="mono flex-none text-[11px] uppercase text-console-dim">me</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+import { PingBoard } from "./PingBoard";
+import { Reveal } from "./atoms";
 
 export function Hero() {
   return (
     <section id="top" className="mx-auto w-full max-w-[1180px] px-5 pt-16 pb-14 sm:px-8 sm:pt-24">
       <Reveal>
         <p className="eyebrow mb-6">
-          00 · {profile.name} · {profile.role} · {profile.education}
+          00 · {profile.name} · {profile.role} · B.Tech ’26
         </p>
       </Reveal>
 
@@ -97,7 +25,7 @@ export function Hero() {
         <Reveal delay={120} className="lg:col-span-5">
           <a href="#contact" className="hire-chip mb-5">
             <span className="dot dot-ok" aria-hidden />
-            {profile.hireLine} · {profile.batch}
+            {profile.hireLine}
           </a>
           <p className="max-w-[52ch] text-[17px] leading-relaxed text-ink-soft">
             {profile.intro}
@@ -118,11 +46,7 @@ export function Hero() {
         </Reveal>
 
         <Reveal delay={200} className="lg:col-span-7">
-          <ProofStrip />
-          <p className="mono mt-3 text-[11px] text-ink-faint">
-            Every dot above is a real request from this page&apos;s server to a production domain.
-            Click one and see for yourself.
-          </p>
+          <PingBoard />
         </Reveal>
       </div>
     </section>

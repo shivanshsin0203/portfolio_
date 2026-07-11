@@ -17,6 +17,8 @@ export type Project = {
   media:
     | { kind: "video"; src: string; poster?: string }
     | { kind: "terminal"; lines: TerminalLine[] };
+  /** Three punchy numbers rendered under the media panel */
+  stats: { value: string; label: string }[];
   /** Included in uptime monitoring */
   monitor: boolean;
 };
@@ -68,6 +70,11 @@ export const projects: Project[] = [
       "GitHub API",
     ],
     media: { kind: "video", src: "/media/gitdocs-promo.mp4", poster: "/media/gitdocs-hero.png" },
+    stats: [
+      { value: "~60s", label: "repo → open PR" },
+      { value: "~50ms", label: "worker → pixel latency" },
+      { value: "1", label: "atomic commit per PR" },
+    ],
     monitor: true,
   },
   {
@@ -118,6 +125,11 @@ export const projects: Project[] = [
       src: "/media/squadwars-promo.mp4",
       poster: "/media/squadwars-landing.png",
     },
+    stats: [
+      { value: "20s", label: "per auction lot" },
+      { value: "1", label: "durable object per match" },
+      { value: "3", label: "AI manager personas" },
+    ],
     monitor: true,
   },
   {
@@ -178,6 +190,11 @@ export const projects: Project[] = [
         { text: "→ Telegram + in-app: \"ETH slid 10.2% off its 24h high…\"", tone: "ok" },
       ],
     },
+    stats: [
+      { value: "60s", label: "price check cadence" },
+      { value: "6", label: "asset classes" },
+      { value: "~$5", label: "monthly infra bill" },
+    ],
     monitor: true,
   },
 ];

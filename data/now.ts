@@ -41,11 +41,11 @@ export const now = {
       state: "exploring",
     },
     {
-      name: "first_startup_role",
-      detail: "full-stack / AI product · remote or relocation · can start now",
+      name: "next_role",
+      detail: "full-stack / AI product engineering · available now",
       state: "open",
       href: "https://x.com/ShivanshSi0203",
-      action: "DM me →",
+      action: "get in touch →",
     },
   ] satisfies NowProcess[],
 } as const;
