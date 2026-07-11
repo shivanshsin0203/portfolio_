@@ -43,7 +43,7 @@ export function NowSection() {
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="mono truncate text-[13.5px] text-console-text">{p.name}</span>
-                  <span className="mono col-span-3 col-start-1 text-[12px] leading-relaxed text-console-dim sm:col-span-1 sm:col-start-auto sm:truncate">
+                  <span className="mono col-span-3 col-start-1 text-[12px] leading-relaxed text-console-dim sm:col-span-1 sm:col-start-auto">
                     {p.detail}
                     {open && p.action ? (
                       <span className="ml-2 text-console-text underline underline-offset-2">

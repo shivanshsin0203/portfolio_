@@ -34,33 +34,25 @@
   --font-mono: var(--font-plex-mono);
 }
 
-/* Blueprint mode — the same spec sheet, printed as a cyanotype.
-   Prussian-blue paper, chalk-white ink, cyan annotations, drafting grid. */
+/* Graphite mode — the same document after dark. Warm charcoal that shares the
+   paper's green-warm undertone, chalk ink, the same ultramarine family. */
 :root[data-theme="dark"] {
-  --color-paper: #0e2238;
-  --color-paper-raise: #143050;
-  --color-paper-dim: #0b1c30;
-  --color-hairline: #26496e;
-  --color-ink: #eaf3fa;
-  --color-ink-soft: #b3cce0;
-  --color-ink-faint: #7492ae;
+  --color-paper: #171815;
+  --color-paper-raise: #1e201c;
+  --color-paper-dim: #131411;
+  --color-hairline: #2b2d28;
+  --color-ink: #ecede7;
+  --color-ink-soft: #b4b6ae;
+  --color-ink-faint: #7c7e76;
 
-  --color-ultra: #6fc9ff;
-  --color-ultra-dim: #92d8ff;
+  --color-ultra: #8296ff;
+  --color-ultra-dim: #9dadff;
 
-  --color-console: #0a1626;
-  --color-console-raise: #10253f;
-  --color-console-line: #23405f;
-  --color-console-text: #cbdfef;
-  --color-console-dim: #7c9cb8;
-}
-
-/* The drafting grid — only on the blueprint. */
-:root[data-theme="dark"] body {
-  background-image:
-    linear-gradient(rgba(111, 201, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(111, 201, 255, 0.05) 1px, transparent 1px);
-  background-size: 28px 28px;
+  --color-console: #0d0f0c;
+  --color-console-raise: #141612;
+  --color-console-line: #272a24;
+  --color-console-text: #c9ccc3;
+  --color-console-dim: #878a80;
 }
 
 /* The circle reveal drives the swap; kill the default cross-fade. */
@@ -254,7 +246,28 @@ body {
 }
 :root[data-theme="dark"] .btn-primary,
 :root[data-theme="dark"] .btn-primary:hover {
-  color: #0a1626;
+  color: #171815;
+}
+
+/* Thin, themed scrollbars — page and panels alike */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline) transparent;
+}
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-hairline);
+  border-radius: 999px;
+  border: 3px solid var(--color-paper);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-ink-faint);
 }
 
 /* phosphor action button — lives on dark panels only */
@@ -400,8 +413,70 @@ body {
   color: var(--color-ink);
   border-color: var(--color-ink-faint);
 }
-.iconbtn.spin {
-  transform: rotate(180deg);
+
+/* sun ⇄ moon morph inside the toggle */
+.theme-icon {
+  overflow: visible;
+}
+.theme-icon .sun,
+.theme-icon .moon {
+  transform-origin: 12px 12px;
+  transition:
+    opacity 300ms ease,
+    transform 550ms cubic-bezier(0.3, 1.4, 0.4, 1);
+}
+.theme-icon[data-mode="light"] .sun {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+.theme-icon[data-mode="light"] .moon {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.theme-icon[data-mode="dark"] .sun {
+  opacity: 1;
+  transform: rotate(0deg) scale(1);
+}
+.theme-icon[data-mode="dark"] .moon {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+/* click ray-burst around the toggle */
+.ray-burst {
+  position: fixed;
+  z-index: 60;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+.ray-burst span {
+  position: absolute;
+  left: -1px;
+  top: -14px;
+  width: 2px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--color-amber);
+  transform: rotate(var(--a)) translateY(-13px);
+  transform-origin: 1px 14px;
+  animation: rayfly 600ms cubic-bezier(0.2, 0.7, 0.3, 1) forwards;
+}
+.ray-burst[data-tone="dark"] span {
+  background: var(--color-ultra);
+}
+@keyframes rayfly {
+  0% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-6px) scaleY(0.6);
+  }
+  25% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(var(--a)) translateY(-26px) scaleY(1);
+  }
 }
 
 :focus-visible {
