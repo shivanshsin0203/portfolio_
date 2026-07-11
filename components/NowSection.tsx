@@ -1,47 +1,76 @@
-import { now } from "@/data/now";
+import { now, type NowProcess } from "@/data/now";
 import { Reveal } from "./atoms";
 
-const columns = [
-  { label: "Building", items: now.building },
-  { label: "Exploring", items: now.exploring },
-  { label: "Open to", items: now.openTo },
-] as const;
+function StateChip({ state }: { state: NowProcess["state"] }) {
+  const cls =
+    state === "running" ? "chip-running" : state === "exploring" ? "chip-exploring" : "chip-open";
+  const label = state === "open" ? "hiring?" : state;
+  return <span className={`chip ${cls}`}>{label}</span>;
+}
 
 export function NowSection() {
   return (
     <section id="now" className="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-8">
       <Reveal>
         <div className="rule pt-6">
-          <div className="flex flex-wrap items-baseline justify-between gap-2">
-            <div>
-              <p className="eyebrow">03 · Currently</p>
-              <h2 className="display-sub mt-3 text-[30px] text-ink sm:text-[38px]">
-                The moving parts
-              </h2>
-            </div>
-            <p className="mono text-[11px] uppercase tracking-[0.12em] text-ink-faint">
-              updated {now.updatedAt} · lives in data/now.ts
-            </p>
-          </div>
+          <p className="eyebrow">03 · Currently</p>
+          <h2 className="display-sub mt-3 text-[30px] text-ink sm:text-[38px]">
+            Running processes
+          </h2>
+          <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-ink-soft">
+            What&apos;s actually open on my machine this month. The last row is the one I&apos;d
+            like you to act on.
+          </p>
         </div>
       </Reveal>
 
-      <div className="mt-8 grid grid-cols-1 gap-8 sm:grid-cols-3">
-        {columns.map((col, i) => (
-          <Reveal key={col.label} delay={i * 70}>
-            <h3 className="mono text-[12px] uppercase tracking-[0.14em] text-ink">
-              {col.label}
-            </h3>
-            <ul className="mt-3 flex flex-col gap-2.5 border-t border-hairline pt-4">
-              {col.items.map((item) => (
-                <li key={item} className="text-[14.5px] leading-relaxed text-ink-soft">
-                  {item}
+      <Reveal delay={80}>
+        <div className="panel mt-8 overflow-hidden">
+          <div className="panel-titlebar justify-between">
+            <span>process monitor</span>
+            <span>updated {now.updatedAt} · edits live in data/now.ts</span>
+          </div>
+          <ol>
+            {now.processes.map((p, i) => {
+              const open = p.state === "open";
+              const row = (
+                <div
+                  className={`grid grid-cols-[2.5rem_1fr_auto] items-baseline gap-x-4 gap-y-1 px-4 py-3 sm:grid-cols-[3rem_minmax(0,14rem)_1fr_auto] sm:px-5 ${
+                    open ? "bg-console-raise" : ""
+                  } ${p.href ? "transition-colors hover:bg-console-raise" : ""}`}
+                >
+                  <span className="mono text-[11.5px] tabular-nums text-console-dim">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="mono truncate text-[13.5px] text-console-text">{p.name}</span>
+                  <span className="mono col-span-3 col-start-1 text-[12px] leading-relaxed text-console-dim sm:col-span-1 sm:col-start-auto sm:truncate">
+                    {p.detail}
+                    {open && p.action ? (
+                      <span className="ml-2 text-console-text underline underline-offset-2">
+                        {p.action}
+                      </span>
+                    ) : null}
+                  </span>
+                  <span className="col-start-3 row-start-1 sm:col-start-4">
+                    <StateChip state={p.state} />
+                  </span>
+                </div>
+              );
+              return (
+                <li key={p.name} className="border-t border-console-line first:border-t-0">
+                  {p.href ? (
+                    <a href={p.href} target="_blank" rel="noopener noreferrer" className="block">
+                      {row}
+                    </a>
+                  ) : (
+                    row
+                  )}
                 </li>
-              ))}
-            </ul>
-          </Reveal>
-        ))}
-      </div>
+              );
+            })}
+          </ol>
+        </div>
+      </Reveal>
     </section>
   );
 }

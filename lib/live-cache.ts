@@ -44,6 +44,7 @@ function freshStore(): Store {
       leetcode: null,
       github: null,
       githubOk: false,
+      watching: 0,
     },
     events: [],
     subscribers: new Set(),
@@ -74,14 +75,14 @@ async function refreshUptime() {
 }
 
 async function refreshGitHub() {
-  const [events, gh] = await Promise.all([fetchEvents(), fetchProfile()]);
+  const [result, gh] = await Promise.all([fetchEvents(), fetchProfile()]);
   store.lastGitHubAt = Date.now();
-  if (events) {
-    store.events = events;
+  if (result) {
+    store.events = result.events;
     store.snapshot = {
       ...store.snapshot,
-      events: events.slice(0, 10),
-      presence: derivePresence(events),
+      events: result.events.slice(0, 10),
+      presence: derivePresence(result.events, result.latestCommit),
       githubOk: true,
     };
   }
@@ -130,11 +131,19 @@ export function getSnapshot(): LiveSnapshot {
   return store.snapshot;
 }
 
+function setWatching() {
+  store.snapshot = { ...store.snapshot, watching: store.subscribers.size };
+}
+
 export function subscribe(fn: Subscriber): () => void {
   store.subscribers.add(fn);
+  setWatching();
+  broadcast(); // everyone learns the new viewer count immediately
   ensureLoop();
   return () => {
     store.subscribers.delete(fn);
+    setWatching();
+    broadcast();
   };
 }
 

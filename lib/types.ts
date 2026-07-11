@@ -26,6 +26,8 @@ export type Presence = {
   label: string; // "shipping right now"
   lastEventAt: string | null;
   lastEventLine: string | null; // "pushed 3 commits to gitdocs"
+  /** first line of the newest commit message, straight from the push payload */
+  latestCommit: { message: string; repo: string } | null;
   /** events per day, oldest → newest, last 14 days (IST) */
   days: number[];
 };
@@ -52,4 +54,6 @@ export type LiveSnapshot = {
   github: GitHubProfile;
   /** true once real github data has loaded at least once */
   githubOk: boolean;
+  /** open SSE connections to this page right now (including you) */
+  watching: number;
 };

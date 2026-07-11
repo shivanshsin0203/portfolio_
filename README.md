@@ -15,8 +15,8 @@ npm run dev     # http://localhost:3000
 
 | What | Where | How often |
 |---|---|---|
-| What I'm doing right now | [`data/now.ts`](data/now.ts) | Whenever life changes. Update `updatedAt` too — it's rendered. |
-| Bio, links, headline | [`data/profile.ts`](data/profile.ts) | Rarely |
+| "Running processes" (what I'm on now) | [`data/now.ts`](data/now.ts) | Whenever life changes. Rows have a `state`: `running` / `exploring` / `open`. Update `updatedAt` too — it's rendered. |
+| Bio, links, headline, hire line | [`data/profile.ts`](data/profile.ts) | Rarely |
 | Projects / case studies | [`data/projects.ts`](data/projects.ts) | Per launch |
 
 **Adding a project:** append an entry to `projects` in `data/projects.ts`, drop its demo video or
@@ -29,7 +29,11 @@ mock, used by PriceAlert until its demo film exists — swap it to `"video"` whe
 - `app/api/live` — SSE stream. One server-side poller feeds every visitor: uptime pings every 30s,
   GitHub events every 2 min, LeetCode every 30 min. Timers stop when nobody's watching.
 - `app/api/snapshot` — same data as JSON, for curl-ers and AI agents.
-- Presence ("shipping right now / active today / last seen") is derived from public GitHub events.
+- Presence ("shipping right now / active today / last seen") is derived from public GitHub events,
+  including the latest commit message straight from the push payload.
+- `watching` — the live visitor counter is the number of open SSE connections. Zero extra infra.
+- Dark mode: circle-reveal via the View Transitions API (`lib/theme.ts`), persisted in
+  localStorage, no first-paint flash (inline script in `app/layout.tsx`).
 
 ## Env vars
 

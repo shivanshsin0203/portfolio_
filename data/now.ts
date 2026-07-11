@@ -1,20 +1,51 @@
 /**
- * The "currently" section. Edit this file whenever life changes — takes ~30 seconds.
+ * The "running processes" section. Edit whenever life changes — takes 30 seconds.
  * Keep `updatedAt` honest; it's rendered on the page.
+ *
+ * state: "running"   = actively building it this month  (green chip)
+ *        "exploring" = reading / prototyping            (amber chip)
+ *        "open"      = the slot I want YOU to fill      (highlighted row)
  */
+export type ProcessState = "running" | "exploring" | "open";
+
+export type NowProcess = {
+  name: string;
+  detail: string;
+  state: ProcessState;
+  /** optional link rendered as the row's action */
+  href?: string;
+  action?: string;
+};
+
 export const now = {
   updatedAt: "2026-07-11",
-  building: [
-    "PriceAlert v1 — shipping the demo film + final polish",
-    "This portfolio — a page that monitors my own products live",
-  ],
-  exploring: [
-    "Agentic workflows and multi-step LLM pipelines",
-    "Durable Objects multiplayer — turning SquadWars 1v1-vs-AI into 1v1-vs-human",
-  ],
-  openTo: [
-    "First full-time role — full-stack / AI-product engineering",
-    "Founding-engineer energy at an early team, remote or relocation",
-    "DMs from founders and people who ship",
-  ],
+  processes: [
+    {
+      name: "pricealert",
+      detail: "v1 polish + shooting the demo film",
+      state: "running",
+    },
+    {
+      name: "portfolio",
+      detail: "this page — it monitors my own products",
+      state: "running",
+    },
+    {
+      name: "squadwars_multiplayer",
+      detail: "1v1 vs a human, same Durable Object room",
+      state: "exploring",
+    },
+    {
+      name: "agentic_workflows",
+      detail: "multi-step LLM pipelines beyond single prompts",
+      state: "exploring",
+    },
+    {
+      name: "first_startup_role",
+      detail: "full-stack / AI product · remote or relocation · can start now",
+      state: "open",
+      href: "https://x.com/ShivanshSi0203",
+      action: "DM me →",
+    },
+  ] satisfies NowProcess[],
 } as const;

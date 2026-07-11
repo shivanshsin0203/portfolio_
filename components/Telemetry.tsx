@@ -28,19 +28,34 @@ export function Telemetry() {
   const lc = snap?.leetcode ?? null;
   const gh = snap?.github ?? null;
   const githubOk = snap?.githubOk ?? false;
+  const watching = snap?.watching ?? 0;
 
   return (
     <section id="telemetry" className="mx-auto w-full max-w-[1180px] px-5 py-16 sm:px-8">
       <Reveal>
         <div className="rule pt-6">
-          <p className="eyebrow">02 · Telemetry</p>
-          <h2 className="display-sub mt-3 text-[30px] text-ink sm:text-[38px]">
-            Watch me work. Literally.
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="eyebrow">02 · Telemetry</p>
+              <h2 className="display-sub mt-3 text-[30px] text-ink sm:text-[38px]">
+                Live while you read
+              </h2>
+            </div>
+            {watching > 0 && (
+              <p
+                className="mono flex items-center gap-2 text-[12px] text-ink-soft"
+                title="Open SSE connections to this page"
+              >
+                <span className="dot dot-ok" aria-hidden />
+                {watching === 1
+                  ? "you're the only one here right now"
+                  : `you + ${watching - 1} other${watching === 2 ? "" : "s"} on this page now`}
+              </p>
+            )}
+          </div>
           <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-ink-soft">
-            This section reads my public GitHub event stream and LeetCode profile while you look at
-            it. If the bars are tall, I&apos;m in a shipping week. If the dot is green, I&apos;m
-            probably at the keyboard now.
+            My GitHub and LeetCode, read as you scroll. Even the visitor counter above is real —
+            it&apos;s the number of open connections to this page&apos;s event stream.
           </p>
         </div>
       </Reveal>
@@ -58,7 +73,16 @@ export function Telemetry() {
                 <p className="mono text-[20px] text-console-text">
                   {presence ? presence.label : "acquiring signal…"}
                 </p>
-                {presence?.lastEventLine && presence.lastEventAt && (
+                {presence?.latestCommit && (
+                  <p className="mono mt-2 text-[12.5px] leading-relaxed text-console-dim">
+                    latest commit · {presence.latestCommit.repo}
+                    <br />
+                    <span className="text-console-text">
+                      &ldquo;{presence.latestCommit.message}&rdquo;
+                    </span>
+                  </p>
+                )}
+                {!presence?.latestCommit && presence?.lastEventLine && presence.lastEventAt && (
                   <p className="mono mt-2 text-[12.5px] leading-relaxed text-console-dim">
                     latest: {presence.lastEventLine} · {relativeTime(presence.lastEventAt)}
                   </p>
@@ -95,9 +119,7 @@ export function Telemetry() {
         <Reveal delay={80} className="lg:col-span-7">
           <div className="panel h-full">
             <div className="panel-titlebar justify-between">
-              <span>
-                activity log · @{profile.githubUser}
-              </span>
+              <span>activity log · @{profile.githubUser}</span>
               <a
                 href={profile.links.github}
                 target="_blank"

@@ -81,12 +81,12 @@ export function Hero() {
     <section id="top" className="mx-auto w-full max-w-[1180px] px-5 pt-16 pb-14 sm:px-8 sm:pt-24">
       <Reveal>
         <p className="eyebrow mb-6">
-          00 · Abstract — {profile.role} · {profile.education}
+          00 · {profile.name} · {profile.role} · {profile.education}
         </p>
       </Reveal>
 
       <Reveal delay={60}>
-        <h1 className="display text-[13.5vw] text-ink sm:text-[88px] lg:text-[112px]">
+        <h1 className="display text-[12.5vw] text-ink sm:text-[84px] lg:text-[104px]">
           {profile.headline[0]}
           <br />
           <span className="text-ultra">{profile.headline[1]}</span>
@@ -95,6 +95,10 @@ export function Hero() {
 
       <div className="mt-10 grid grid-cols-1 gap-8 lg:grid-cols-12">
         <Reveal delay={120} className="lg:col-span-5">
+          <a href="#contact" className="hire-chip mb-5">
+            <span className="dot dot-ok" aria-hidden />
+            {profile.hireLine} · {profile.batch}
+          </a>
           <p className="max-w-[52ch] text-[17px] leading-relaxed text-ink-soft">
             {profile.intro}
           </p>

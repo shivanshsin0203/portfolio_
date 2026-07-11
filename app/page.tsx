@@ -22,11 +22,11 @@ export default function Home() {
             <div className="rule pt-6">
               <p className="eyebrow">01 · Production systems</p>
               <h2 className="display-sub mt-3 text-[30px] text-ink sm:text-[38px]">
-                Built solo. Shipped to real domains.
+                Three products, shipped solo
               </h2>
               <p className="mt-3 max-w-[62ch] text-[15px] leading-relaxed text-ink-soft">
-                Not repos — running products with users, uptime and bills. Each panel below carries
-                its own live status, checked while you read this.
+                Each one lives on its own domain and pays its own server bills. The status in every
+                panel is checked while you read.
               </p>
             </div>
           </Reveal>

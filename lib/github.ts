@@ -18,12 +18,17 @@ type RawEvent = {
   created_at: string;
   repo?: { name?: string };
   payload?: {
-    commits?: unknown[];
+    commits?: { message?: string }[];
     action?: string;
     ref_type?: string;
     ref?: string | null;
     pull_request?: { html_url?: string };
   };
+};
+
+export type EventsResult = {
+  events: GitHubEvent[];
+  latestCommit: { message: string; repo: string } | null;
 };
 
 function shortRepo(full: string | undefined): string {
@@ -72,7 +77,7 @@ function describe(e: RawEvent): { verb: string; url: string } | null {
   }
 }
 
-export async function fetchEvents(): Promise<GitHubEvent[] | null> {
+export async function fetchEvents(): Promise<EventsResult | null> {
   try {
     const res = await fetch(
       `${API}/users/${profile.githubUser}/events/public?per_page=100`,
@@ -81,12 +86,24 @@ export async function fetchEvents(): Promise<GitHubEvent[] | null> {
     if (!res.ok) return null;
     const raw = (await res.json()) as RawEvent[];
     const events: GitHubEvent[] = [];
+    let latestCommit: EventsResult["latestCommit"] = null;
     for (const e of raw) {
+      if (!latestCommit && e.type === "PushEvent" && e.payload?.commits?.length) {
+        // commits arrive oldest → newest; the last one is the head of the push
+        const head = e.payload.commits[e.payload.commits.length - 1];
+        const firstLine = head?.message?.split("\n")[0]?.trim();
+        if (firstLine) {
+          latestCommit = {
+            message: firstLine.length > 90 ? `${firstLine.slice(0, 87)}…` : firstLine,
+            repo: shortRepo(e.repo?.name),
+          };
+        }
+      }
       const d = describe(e);
       if (!d) continue;
       events.push({ id: e.id, type: e.type, repo: e.repo?.name ?? "", verb: d.verb, at: e.created_at, url: d.url });
     }
-    return events;
+    return { events, latestCommit };
   } catch {
     return null;
   }
@@ -135,7 +152,10 @@ function dayBuckets(events: GitHubEvent[], days = 14): number[] {
   return buckets;
 }
 
-export function derivePresence(events: GitHubEvent[]): Presence {
+export function derivePresence(
+  events: GitHubEvent[],
+  latestCommit: EventsResult["latestCommit"] = null,
+): Presence {
   const latest = events[0] ?? null;
   const ageMs = latest ? Date.now() - new Date(latest.at).getTime() : Infinity;
 
@@ -157,6 +177,7 @@ export function derivePresence(events: GitHubEvent[]): Presence {
     label,
     lastEventAt: latest?.at ?? null,
     lastEventLine: latest ? latest.verb : null,
+    latestCommit,
     days: dayBuckets(events),
   };
 }

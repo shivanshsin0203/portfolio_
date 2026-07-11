@@ -10,15 +10,15 @@ export function Pitch() {
         </div>
       </Reveal>
       <Reveal delay={60}>
-        <h2 className="display mt-6 max-w-[16ch] text-[11vw] text-ink sm:text-[64px] lg:text-[84px]">
-          Skip the screening call — you just watched me work.
+        <h2 className="display mt-6 max-w-[14ch] text-[11vw] text-ink sm:text-[64px] lg:text-[84px]">
+          Looking for my first <span className="text-ultra">startup role.</span>
         </h2>
       </Reveal>
       <Reveal delay={120}>
         <p className="mt-6 max-w-[58ch] text-[16px] leading-relaxed text-ink-soft">
-          I&apos;m looking for my first full-time role. If you&apos;re a founder or an engineer
-          shipping AI products and you want someone who takes things from a planning doc to a
-          production domain — my DMs are open, and the receipts are above.
+          I want a small team, real users, and problems I can own end to end. The three products
+          above are my resume; the live dots are my references. If your startup needs a full-stack
+          or AI-product engineer who can start now, reach me on X — I reply fast.
         </p>
       </Reveal>
       <Reveal delay={180}>
