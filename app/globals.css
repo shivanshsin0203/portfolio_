@@ -34,24 +34,33 @@
   --font-mono: var(--font-plex-mono);
 }
 
-/* Night shift — same document, lights off. Instruments stay instruments. */
+/* Blueprint mode — the same spec sheet, printed as a cyanotype.
+   Prussian-blue paper, chalk-white ink, cyan annotations, drafting grid. */
 :root[data-theme="dark"] {
-  --color-paper: #0c1015;
-  --color-paper-raise: #131920;
-  --color-paper-dim: #0a0d11;
-  --color-hairline: #242e39;
-  --color-ink: #e9ebe6;
-  --color-ink-soft: #a9b2bb;
-  --color-ink-faint: #707a85;
+  --color-paper: #0e2238;
+  --color-paper-raise: #143050;
+  --color-paper-dim: #0b1c30;
+  --color-hairline: #26496e;
+  --color-ink: #eaf3fa;
+  --color-ink-soft: #b3cce0;
+  --color-ink-faint: #7492ae;
 
-  --color-ultra: #7c8dff;
-  --color-ultra-dim: #98a5ff;
+  --color-ultra: #6fc9ff;
+  --color-ultra-dim: #92d8ff;
 
-  --color-console: #11161d;
-  --color-console-raise: #192029;
-  --color-console-line: #2b3644;
-  --color-console-text: #c9d2db;
-  --color-console-dim: #7b8692;
+  --color-console: #0a1626;
+  --color-console-raise: #10253f;
+  --color-console-line: #23405f;
+  --color-console-text: #cbdfef;
+  --color-console-dim: #7c9cb8;
+}
+
+/* The drafting grid — only on the blueprint. */
+:root[data-theme="dark"] body {
+  background-image:
+    linear-gradient(rgba(111, 201, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(111, 201, 255, 0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
 }
 
 /* The circle reveal drives the swap; kill the default cross-fade. */
@@ -245,7 +254,7 @@ body {
 }
 :root[data-theme="dark"] .btn-primary,
 :root[data-theme="dark"] .btn-primary:hover {
-  color: #0c1015;
+  color: #0a1626;
 }
 
 /* phosphor action button — lives on dark panels only */
@@ -321,32 +330,53 @@ body {
   font-weight: 600;
 }
 
-/* floating terminal launcher */
+/* floating terminal launcher — small, quiet, out of the way */
 .term-launcher {
   position: fixed;
-  right: 1.1rem;
-  bottom: 1.1rem;
+  right: 0.9rem;
+  bottom: 0.9rem;
   z-index: 45;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  letter-spacing: 0.06em;
   color: var(--color-console-text);
   background: var(--color-console);
   border: 1px solid var(--color-console-line);
   border-radius: 8px;
-  padding: 0.55rem 0.85rem;
   cursor: pointer;
-  box-shadow: 0 10px 28px -12px rgba(10, 14, 19, 0.55);
+  opacity: 0.72;
   transition:
-    transform 130ms ease,
+    opacity 130ms ease,
     border-color 130ms ease;
 }
-.term-launcher:hover {
-  transform: translateY(-2px);
+.term-launcher:hover,
+.term-launcher:focus-visible {
+  opacity: 1;
   border-color: var(--color-console-dim);
+}
+.term-launcher-label {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  white-space: nowrap;
+  font-size: 0.6875rem;
+  letter-spacing: 0.06em;
+  color: var(--color-console-text);
+  background: var(--color-console);
+  border: 1px solid var(--color-console-line);
+  border-radius: 6px;
+  padding: 0.25rem 0.6rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 130ms ease;
+}
+.term-launcher:hover .term-launcher-label,
+.term-launcher:focus-visible .term-launcher-label {
+  opacity: 1;
 }
 
 /* status-bar icon buttons */

@@ -32,8 +32,9 @@ mock, used by PriceAlert until its demo film exists — swap it to `"video"` whe
 - Presence ("shipping right now / active today / last seen") is derived from public GitHub events,
   including the latest commit message straight from the push payload.
 - `watching` — the live visitor counter is the number of open SSE connections. Zero extra infra.
-- Dark mode: circle-reveal via the View Transitions API (`lib/theme.ts`), persisted in
-  localStorage, no first-paint flash (inline script in `app/layout.tsx`).
+- Dark mode is "blueprint mode": the spec sheet reprinted as a cyanotype — Prussian-blue paper,
+  chalk ink, cyan accents, drafting grid. Circle-reveal via the View Transitions API
+  (`lib/theme.ts`), persisted in localStorage, no first-paint flash (script in `app/layout.tsx`).
 
 ## Env vars
 

@@ -185,18 +185,6 @@ export function ProjectCase({ project, flip }: { project: Project; flip: boolean
           ) : (
             <CaseTerminal lines={project.media.lines} />
           )}
-          <div className="grid grid-cols-3 divide-x divide-console-line border-t border-console-line">
-            {project.stats.map((s) => (
-              <div key={s.label} className="px-4 py-3.5 sm:px-5">
-                <p className="mono text-[19px] tabular-nums text-console-text sm:text-[22px]">
-                  {s.value}
-                </p>
-                <p className="mono mt-0.5 text-[10px] uppercase tracking-[0.1em] text-console-dim sm:text-[10.5px]">
-                  {s.label}
-                </p>
-              </div>
-            ))}
-          </div>
         </div>
       </Reveal>
     </article>

@@ -176,11 +176,10 @@ export function Terminal() {
         className="term-launcher"
         onClick={() => setOpen(true)}
         aria-label="Open guest terminal (or press t)"
-        title="or press t"
       >
         <span aria-hidden>&gt;_</span>
-        <span className="hidden sm:inline">
-          terminal <span className="opacity-60">· press t</span>
+        <span className="term-launcher-label" aria-hidden>
+          terminal · press t
         </span>
       </button>
 

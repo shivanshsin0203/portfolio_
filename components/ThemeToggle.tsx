@@ -27,11 +27,11 @@ export function ThemeToggle() {
       ref={ref}
       onClick={onClick}
       className={`iconbtn ${spin ? "spin" : ""}`}
-      aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
-      title={theme === "dark" ? "lights on" : "lights off"}
+      aria-label={theme === "dark" ? "Back to paper (light mode)" : "Print the blueprint (dark mode)"}
+      title={theme === "dark" ? "back to paper" : "print the blueprint"}
     >
       <span aria-hidden className="text-[13px] leading-none">
-        {theme === "dark" ? "☀" : "☾"}
+        {theme === "dark" ? "☀" : "◫"}
       </span>
     </button>
   );
