@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { Archivo, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google";
 import { profile, siteUrl } from "@/data/profile";
@@ -73,6 +73,14 @@ export const metadata: Metadata = {
     // A hint for AI crawlers that a machine-readable summary exists.
     "llms-txt": `${siteUrl}/llms.txt`,
   },
+};
+
+export const viewport: Viewport = {
+  // browser UI (mobile address bar etc.) matches the paper / graphite surfaces
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f3f4f0" },
+    { media: "(prefers-color-scheme: dark)", color: "#171815" },
+  ],
 };
 
 const personJsonLd = {

@@ -41,7 +41,7 @@ mock, used by PriceAlert until its demo film exists — swap it to `"video"` whe
 | Var | Needed? | Purpose |
 |---|---|---|
 | `NEXT_PUBLIC_SITE_URL` | in prod | Canonical URL for OG images, sitemap, llms.txt |
-| `GITHUB_TOKEN` | optional | Raises the GitHub API limit from 60 → 5000 req/hr. A classic PAT with **no scopes** is enough. |
+| `GITHUB_TOKEN` | optional locally, recommended on Vercel | Anonymous GitHub API calls are limited to 60/hr **per IP**, and Vercel's shared egress IPs often have that pool drained by other tenants — a token gives you your own 5000/hr. A classic PAT with **zero scopes** ticked is enough (it can only read public data). |
 
 ## Deploy (Vercel)
 
