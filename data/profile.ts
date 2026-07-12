@@ -12,7 +12,7 @@ export const profile = {
   email: "singhshivansh12may@gmail.com",
   githubUser: "shivanshsin0203",
   leetcodeUser: "singhshivansh12may",
-  headline: ["Fresh out of college.", "Already in production."],
+  headline: ["Straight out of college.", "Straight into production."],
   intro:
     "I'm Shivansh, a ’26 batch engineer from NIT Hamirpur. Instead of a resume full of adjectives, here are three products I built and run myself — and a page that checks on them live while you read it.",
   hireLine: "open to work",
