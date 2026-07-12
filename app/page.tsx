@@ -1,5 +1,6 @@
 import { projects } from "@/data/projects";
 import { LiveProvider } from "@/components/LiveProvider";
+import { Cursor } from "@/components/Cursor";
 import { StatusBar } from "@/components/StatusBar";
 import { Hero } from "@/components/Hero";
 import { ProjectCase } from "@/components/ProjectCase";
@@ -13,6 +14,7 @@ import { Reveal } from "@/components/atoms";
 export default function Home() {
   return (
     <LiveProvider>
+      <Cursor />
       <StatusBar />
       <main className="flex-1">
         <Hero />
