@@ -76,7 +76,7 @@ export const projects: Project[] = [
     name: "SquadWars",
     domain: "squadwars.online",
     url: "https://squadwars.online",
-    repo: "https://github.com/shivanshsin0203",
+    repo: "https://github.com/shivanshsin0203/squadwars",
     tagline: "A real-time 1v1 football auction against an AI manager that schemes.",
     summary:
       "Bid live on real footballers in 20-second lots against Micah Richards, Jamie Carragher or Thierry Henry — LLM-driven personas with budgets, lookahead and grudges. Build your XI, and the better squad takes the night.",
@@ -126,7 +126,7 @@ export const projects: Project[] = [
     name: "PriceAlert",
     domain: "pricealert.store",
     url: "https://pricealert.store",
-    repo: "https://github.com/shivanshsin0203",
+    repo: "https://github.com/shivanshsin0203/PriceAlert",
     tagline: "Market alerts you write in plain English.",
     summary:
       "\"Ping me if BTC drops 5% in the next hour\" — parsed into a validated condition object, watched every minute, delivered to Telegram and in-app with a grounded AI explanation of why it fired.",
